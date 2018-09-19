@@ -5,6 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Sonsie+One" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/style.css">
     
@@ -14,17 +15,47 @@
         <div class="container-fluid">
             <div class="row">
             <!-- partie gauche : informations sur les restaurants -->
-                <div class="col-md-6">
-                <!-- boutton actualiser -->
-                <!-- champs de recherche -->
+                <div class="col-md-6 no-padding" id="RestaurantsInfo" >
+                <!-- Menu -->
+                    <div class="row text-center" id="menu">
+                    <!-- boutton actualiser -->
+                        <div class="col-md-2">
+                            <button id="refresh" class="btn-action">Actualiser</button>
+                        </div>
+                    <!-- champs de recherche -->
+                        <div class="col-md-7 text-center" id="search">
+                            <div class="text-center">
+                                <form role="search">
+                                    <input type="search" name="q" placeholder="Votre recherche :" id="autocompleteId" aria-label="Search through site content">
+                                </form>
+                                <a href="">OK</a> 
+                            </div>
+                            
+                        </div>
+                    <!-- filtre -->
+                        <div class="col-md-3">
+                            <select id="filterId" class="btn-action">
+                                <option disabled selected="selected"> Nombre d' étoile : </option>
+                                <option value="noFilter"> Pas de filtre </option>
+                                <option value="1"> 1 étoile </option>
+                                <option value="2"> 2 étoiles </option>
+                                <option value="3"> 3 étoiles</option>
+                                <option value="4"> 4 étoiles</option>
+                                <option value="5"> 5 étoiles </option>
+                            </select>
+                        </div>
+                    </div>
+                <!-- infos restaurants : Nom, étoiles, photo, adresse, commentaires (nom, nombre d'étoiles, le commentaire) -->
+                    <div class="row" id="restautants">
+
+                    </div>
+                    <div class="row text-center">
                 <!-- boutton ajouter un restaurant -->
-                <!-- filtre -->
-
-                <!-- div infos restaurants : Nom, étoiles, photo, adresse, commentaires (nom, nombre d'étoiles, le commentaire) -->
-
+                        <button id="addComment" class="btn-action add">Ajouter un commentaire</button>
+                    </div>
                 </div>
             <!-- partie droite : les restaurants représenté sur Google Maps -->
-                <div class="col-md-6">
+                <div class="col-md-6 no-padding" id="googleMap">
                     <div id="map"></div>
                 <!-- afficher les marker sur Google Maps  -->
                 <!-- boutton ajouter un restaurant -->
@@ -40,8 +71,9 @@
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALG3IW7M74k_mIGiBJcSAhubKtVcSkLUE&callback=initMap">
     </script>
-    <!--<script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>-->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!--      -->
     
 </html>
 

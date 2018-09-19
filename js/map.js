@@ -29,15 +29,32 @@ myMap.prototype.initMap = function () {
         animation: google.maps.Animation.DROP,
         icon: 'https://.png'
     })
-    this.getJson("../js/restaurants.json");
+    
     this.PlaceService = new google.maps.places.PlacesService(this.map);
 }
 function initMap() {
-    // The location of Uluru
-    var uluru = {lat: -25.344, lng: 131.036};
-    // The map, centered at Uluru
-    var map = new google.maps.Map(
-        document.getElementById('map'), {zoom: 4, center: uluru});
-    // The marker, positioned at Uluru
-    var marker = new google.maps.Marker({position: uluru, map: map});
-  }
+    var myLatLng = { lat: -25.363, lng: 131.044 };
+
+    // Create a map object and specify the DOM element
+    // for display.
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: myLatLng,
+        zoom: 4
+    });
+
+    // Create a marker and set its position.
+    var marker = new google.maps.Marker({
+        map: map,
+        position: myLatLng,
+        title: 'Hello World!'
+    });
+}
+
+// Création d'une requête HTTP
+var req = new XMLHttpRequest();
+// Requête HTTP GET synchrone vers le fichier langages.txt publié localement
+req.open("GET", "http://localhost/json/restaurant.json", false);
+// Envoi de la requête
+req.send(null);
+// Affiche la réponse reçue pour la requête
+console.log(req.responseText);
