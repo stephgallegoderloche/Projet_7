@@ -50,11 +50,41 @@ function initMap() {
     });
 }
 
-// Création d'une requête HTTP
-var req = new XMLHttpRequest();
-// Requête HTTP GET synchrone vers le fichier langages.txt publié localement
-req.open("GET", "http://localhost/json/restaurant.json", false);
-// Envoi de la requête
-req.send(null);
-// Affiche la réponse reçue pour la requête
-console.log(req.responseText);
+
+// Exécute un appel AJAX GET
+// Prend en paramètres l'URL cible et la fonction callback appelée en cas de succès
+function ajaxGet(url, callback) {
+    var restaurants = new XMLHttpRequest();
+    restaurants.open("GET", url);
+    restaurants.addEventListener("load", function () {
+        if (restaurants.status >= 200 && restaurants.status < 400) {
+            // Appelle la fonction callback en lui passant la réponse de la requête
+            callback(restaurants.responseText);
+        } else {
+            console.error(restaurants.status + " " + restaurants.statusText + " " + url);
+        }
+    });
+    restaurants.addEventListener("error", function () {
+        console.error("Erreur réseau avec l'URL " + url);
+    });
+    restaurants.send(null);
+}
+//Rechercher le nom de tous les restaurants dans le fichier JSON
+ajaxGet("http://localhost/json/restaurant.json", function (reponse) {
+    // Transforme la réponse en tableau d'objets JavaScript
+    var restaurants = JSON.parse(reponse);
+    var viewRestaurants = document.getElementById("restautants");
+    // Affiche le titre de chaque restaurant
+    restaurants.forEach(function (restaurant) {
+       // Crée une ligne de tableau HTML pour chaque tableau
+       var viewRestaurant = document.createElement("div");
+       viewRestaurant.setAttribute('class','restaurant');
+       viewRestaurant.innerHTML = 
+       `<div class="col-md-12 restaurantName text-bold">` + restaurant.restaurantName + `</div>` 
+       + `<div class="col-md-12 address">` + restaurant.address + `</div>` 
+       +`<div class="col-md-3 ratingsStars">` + restaurant.ratings[0].stars + `</div>`
+       +`<div class="col-md-9 ratingsComment">` + restaurant.ratings[1].comment + `</div>`;
+       viewRestaurants.appendChild(viewRestaurant);
+       //console.log(restaurant.ratings[0].stars);
+       });
+});

@@ -16,6 +16,9 @@ footer > p{
     width: 740px;
     height: 600px ;
 }
+#restautants{
+    padding: 1.2em;
+}
 .no-padding{
     padding-left: 0;
     padding-right: 0;
@@ -56,7 +59,9 @@ footer > p{
     color: rgb(163, 163, 233);
     border-color: rgb(163, 163, 233);
     width: 10em;
+    vertical-align: middle;
     font-weight: 700;
+    padding: 0.3em;
     background-color: #fff;
     margin: 2.5em 0;
 }
@@ -95,7 +100,15 @@ input[type=search] {
 }
 
 /* -------------------Affichage des restaurant---------------- */
-
+.restaurant {
+    border-bottom: 1px solid rgb(163, 163, 233);
+    height: 5em;
+}
+.restaurantName{
+    font-weight: 700;
+    font-size: 20px;
+    color: rgb(163, 163, 233);
+}
 /* -------------------Affichage de la MAP--------------------- */
 #map{
     width: 100%;
