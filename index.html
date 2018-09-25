@@ -35,15 +35,12 @@
                         </div>
                     <!-- filtre -->
                         <div class="col-md-3">
-                            <select id="filterId" class="btn-action">
-                                <option disabled selected="selected"> Nombre d' étoile : </option>
-                                <option value="noFilter"> Pas de filtre </option>
-                                <option value="1"> 1 étoile </option>
-                                <option value="2"> 2 étoiles </option>
-                                <option value="3"> 3 étoiles</option>
-                                <option value="4"> 4 étoiles</option>
-                                <option value="5"> 5 étoiles </option>
-                            </select>
+                            <p>
+                                <label for="amount">Price range:</label>
+                                <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                            </p>
+                            
+                            <div id="slider-range"></div>
                         </div>
                     </div>
                 <!-- infos restaurants : Nom, étoiles, photo, adresse, commentaires (nom, nombre d'étoiles, le commentaire) -->
