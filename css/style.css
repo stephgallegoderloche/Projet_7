@@ -13,8 +13,9 @@ footer > p{
     padding: 1em;
 }
 #googleMap > #map {
-    width: 740px;
-    height: 600px ;
+    width: 100%;
+    /*affiche 100% de l'écran - la taille du footer*/
+    height: calc(100vh - 48px);
 }
 #restautants{
     padding: 1.2em;
