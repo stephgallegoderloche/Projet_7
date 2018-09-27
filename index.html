@@ -19,30 +19,36 @@
             <!-- partie gauche : informations sur les restaurants -->
                 <div class="col-md-6 no-padding" id="RestaurantsInfo" >
                 <!-- Menu -->
-                    <div class="row text-center" id="menu">
-                    <!-- boutton actualiser -->
-                        <div class="col-md-3">
-                            <button id="refresh" class="btn-action">Actualiser</button>
-                        </div>
-                    <!-- champs de recherche -->
+                    <div class="row" id="menu">
+                        <div class="col-md-6">
+                            <div class="row">
+                            <!-- boutton actualiser -->
+                                <div class="col-md-12">
+                                    <button id="refresh" class="btn-action">Actualiser</button>
+                                </div>
+                            <!-- filtre -->
+                                <div class="col-md-12">
+                                    <h5>Filtrer le nombres d'étoiles :</h5>
+                                    <p>
+                                        <label for="amount">Nombre d'étoiles :</label>
+                                        <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                                    </p>
+                                
+                                    <div id="slider-range"></div>
+                                </div>
+                            </div>
+                        </div> 
+                        <!-- champs de recherche -->
                         <div class="col-md-6 text-center" id="search">
                             <div class="text-center">
                                 <form role="search">
                                     <input type="search" name="q" placeholder="Votre recherche :" id="autocompleteId" aria-label="Search through site content">
                                 </form>
-                                <a href="">OK</a> 
+                                <a href="">OK</a>
                             </div>
-                            
                         </div>
-                    <!-- filtre -->
-                        <div class="col-md-3">
-                            <p>
-                                <label for="amount">Price range:</label>
-                                <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                            </p>
-                            
-                            <div id="slider-range"></div>
-                        </div>
+                    
+                   
                     </div>
                 <!-- infos restaurants : Nom, étoiles, photo, adresse, commentaires (nom, nombre d'étoiles, le commentaire) -->
                     <div class="row" id="restautants">
@@ -73,6 +79,21 @@
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $("#slider-range").slider({
+                range: true,
+                min: 0,
+                max: 5,
+                values: [2, 5],
+                slide: function (event, ui) {
+                $("#amount").val( ui.values[0] + " étoiles" + "  -  "+ ui.values[1] + " étoiles" );
+                }
+            });
+            $("#amount").val(  $("#slider-range").slider("values", 0) + " étoiles" + "  -  " +
+             $("#slider-range").slider("values", 1) + " étoiles");
+        });
+    </script>
     <!--      -->
     
 </html>

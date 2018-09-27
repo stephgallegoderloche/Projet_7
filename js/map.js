@@ -88,3 +88,6 @@ ajaxGet("http://localhost/json/restaurant.json", function (reponse) {
        //console.log(restaurant.ratings[0].stars);
        });
 });
+
+
+

@@ -4,6 +4,10 @@ body{
     font-family: 'Open Sans Condensed',sans-serif;
     font-size: 14px;
 }
+textarea,
+input {
+    outline: none;
+}
 footer{
     background-color: rgb(221, 221, 221);
     width: 100%;
