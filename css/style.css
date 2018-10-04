@@ -9,7 +9,7 @@ input {
     outline: none;
 }
 footer{
-    background-color: rgb(221, 221, 221);
+    background-color: dddddd;
     width: 100%;
     height: auto;
 }
@@ -41,8 +41,8 @@ footer > p{
 .btn-action{
     vertical-align: middle;
     width: 8em;
-    background: rgb(221, 221, 221);
-    border: 1px solid rgb(185, 185, 185);
+    background: #fff;
+    border: 1px solid #a3a3e9;
     border-radius: 0.5em;
     display: inline-block;
     height: 100%;
@@ -53,7 +53,7 @@ footer > p{
     -moz-transition: color 0.4s ease-in-out;
     -o-transition: color 0.4s ease-in-out;
     transition: color 0.4s ease-in-out;
-    background: rgb(185, 185, 185);
+    background: #b9b9b9;
     -webkit-transition: background-color 0.4s ease-in-out;
     -moz-transition: background-color 0.4s ease-in-out;
     -o-transition: background-color 0.4s ease-in-out;
@@ -61,8 +61,8 @@ footer > p{
 }
 /* ---button ajouter(commentaire/restaurants)--- */
 .btn-action.add{
-    color: rgb(163, 163, 233);
-    border-color: rgb(163, 163, 233);
+    color: #a3a3e9;
+    border-color: #a3a3e9;
     width: 10em;
     vertical-align: middle;
     font-weight: 700;
@@ -74,7 +74,7 @@ footer > p{
     color:  #fff;
     border-color:none;
     font-weight: normal;
-    background-color: rgb(163, 163, 233);
+    background-color: #a3a3e9;
 }
 
 /* ---button search--- */
@@ -94,25 +94,32 @@ input[type=search] {
 }
 #search > div > a{
     position: absolute;
-    background-color: rgb(163, 163, 233);
+    background-color: #a3a3e9;
     color: #fff;
     border-radius: 0 0.5em 0.5em 0;
     padding: 0.25em 0.4em;
 }
 #search > div > a:hover {
-    color: rgb(92, 92, 92);
+    color: #5c5c5c;
     text-decoration: none;   
 }
-
+/* ---Filter ratings--- */
+#amount{
+    border: none;
+    background-color: transparent;
+    color: #fff!important;
+    margin-left: 30px;
+    letter-spacing: 1px;
+}
 /* -------------------Affichage des restaurant---------------- */
 .restaurant {
-    border-bottom: 1px solid rgb(163, 163, 233);
+    border-bottom: 1px solid #a3a3e9;
     height: 5em;
 }
 .restaurantName{
     font-weight: 700;
     font-size: 20px;
-    color: rgb(163, 163, 233);
+    color: #a3a3e9;
 }
 /* -------------------Affichage de la MAP--------------------- */
 #map{
