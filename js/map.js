@@ -5,8 +5,10 @@
 
 class MyMap  {
     constructor(){
-        
+        this.map
         this.restaurants    = [] 
+        this.infoWindow
+        this.markers 
     }
     
 }
@@ -36,9 +38,10 @@ function initMap() {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
+            //My Position
             var marker = new google.maps.Marker({
                 position: pos,
-                map: this.map,
+                map: map,
                 title: "Vous êtes ici",
                 animation: google.maps.Animation.DROP,
                 icon: 'img/my-location.png'
@@ -57,7 +60,33 @@ function initMap() {
         handleLocationError(false, infoWindow, map.getCenter());
     }
     /*() => {*/
-        console.log("ouiiiiiii")
+      /*  console.log("ouiiiiiii")*/
+/*
+    // Création d'une requête HTTP
+    var req = new XMLHttpRequest();
+    // Requête HTTP GET synchrone vers le fichier langages.txt publié localement
+    req.open("GET", "http://localhost/json/restaurant.json", false);
+    // Envoi de la requête
+    req.send(null);
+    // Affiche la réponse reçue pour la requête
+*/
+    // Exécute un appel AJAX GET
+    // Prend en paramètres l'URL cible et la fonction callback appelée en cas de succès
+    
+    //Rechercher le nom de tous les restaurants dans le fichier JSON
+    ajaxGet("http://localhost/json/restaurant.json", function (reponse) {
+        // Transforme la réponse en tableau d'objets JavaScript
+        var restaurants = JSON.parse(reponse);
+        var viewRestaurants = document.getElementById("restaurants");
+        // Affiche le titre de chaque restaurant
+
+        restaurants.forEach(function (restaurant) {
+            let resto = new Restaurant(restaurant)
+            maMap.restaurants.push(resto)
+            resto.creatRestaurantView()
+        });
+
+        console.log(maMap.restaurants)
         maMap.restaurants.forEach((restaurant) => {
                 
             var pos = {
@@ -67,14 +96,19 @@ function initMap() {
 
             var titleInfo = `${restaurant.name} ${restaurant.average}`
             var markerResto = new google.maps.Marker({
-                map: this.map,
+                map: map,
+                restaurant: restaurant,
                 position: pos,
                 title: titleInfo,
                 animation: google.maps.Animation.DROP,
                 icon: 'img/resto-location.png',
             })
+            
         }) 
-    /* }*/
+
+    });
+        
+    
 }
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -91,16 +125,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 /**
 
 */
-// Création d'une requête HTTP
-var req = new XMLHttpRequest();
-// Requête HTTP GET synchrone vers le fichier langages.txt publié localement
-req.open("GET", "http://localhost/json/restaurant.json", false);
-// Envoi de la requête
-req.send(null);
-// Affiche la réponse reçue pour la requête
 
-// Exécute un appel AJAX GET
-// Prend en paramètres l'URL cible et la fonction callback appelée en cas de succès
 function ajaxGet(url, callback) {
     var restaurants = new XMLHttpRequest();
     restaurants.open("GET", url);
@@ -117,17 +142,3 @@ function ajaxGet(url, callback) {
     });
     restaurants.send(null);
 }
-//Rechercher le nom de tous les restaurants dans le fichier JSON
-ajaxGet("http://localhost/json/restaurant.json", function (reponse) {
-    // Transforme la réponse en tableau d'objets JavaScript
-    var restaurants = JSON.parse(reponse);
-    var viewRestaurants = document.getElementById("restaurants");
-    // Affiche le titre de chaque restaurant
-   
-    restaurants.forEach(function (restaurant) {
-        let resto = new Restaurant(restaurant)
-        maMap.restaurants.push(resto)
-        resto.creatRestaurantView()
-    });
-    
-});

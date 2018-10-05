@@ -5,7 +5,7 @@ body{
     font-size: 14px;
 }
 textarea,
-input {
+input,span {
     outline: none;
 }
 footer{
@@ -28,13 +28,50 @@ footer > p{
     padding-left: 0;
     padding-right: 0;
 }
+/* -------------------header---------------------------------- */
+header .img > img{
+    height: 50px;
+    width: auto;
+    margin: 0 auto;
+}
+header .title >h1{
+    font-weight: 700;
+    color: #a3a3e9;
+    margin-top: 10px;
+}
+header > div > button{
+    margin: 20px auto;
+}
 /* -------------------menu------------------------------------ */
 /* ---général---*/
 #menu{
     background: #cbcbcb;
-    width: 100%;
     padding: 1.1em;
-    margin-left: 0;
+}
+/* ---filter---*/
+
+#filter > div > h4 {
+    border-bottom: 1px solid #a3a3e9;
+}
+/* ---Filter ratings choose--- */
+#amount {
+    border: none;
+    background-color: transparent;
+    color: #a3a3e9 !important;
+    margin-left: 30px;
+    letter-spacing: 1px;
+}
+#filter > .choose {
+    margin-top: 10px;
+}
+.ui-slider-range{
+    background-color: #a3a3e9;
+}
+#slider-range > .ui-slider-handle{
+border: 1px solid #8a8ac4;
+background: #c3c3e2;
+font-weight: normal;
+color: #454545;
 }
 /* -------------------buttons--------------------------------- */
 /* ---button refresh--- */
@@ -92,25 +129,18 @@ input[type=search] {
     padding-left: 0.5em;
     width: 100%;
 }
-#search > div > a{
+#search > a{
     position: absolute;
     background-color: #a3a3e9;
     color: #fff;
     border-radius: 0 0.5em 0.5em 0;
     padding: 0.25em 0.4em;
 }
-#search > div > a:hover {
+#search > a:hover {
     color: #5c5c5c;
     text-decoration: none;   
 }
-/* ---Filter ratings--- */
-#amount{
-    border: none;
-    background-color: transparent;
-    color: #fff!important;
-    margin-left: 30px;
-    letter-spacing: 1px;
-}
+
 /* -------------------Affichage des restaurant---------------- */
 .restaurant {
     border-bottom: 1px solid #a3a3e9;

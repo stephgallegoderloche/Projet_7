@@ -5,6 +5,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <link rel="icon" type="image/x-icon" href="img/favicon.ico" />
+        <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
         <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Sonsie+One" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css">
@@ -15,48 +17,55 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-            
             <!-- partie gauche : informations sur les restaurants -->
                 <div class="col-md-6 no-padding" id="RestaurantsInfo" >
-                <!-- Menu -->
-                    <div class="row" id="menu">
-                        <div class="col-md-6">
-                            <div class="row">
-                            <!-- boutton actualiser -->
-                                <div class="col-md-12">
-                                    <button id="refresh" class="btn-action">Actualiser</button>
-                                </div>
-                            <!-- filtre -->
-                                <div class="col-md-12">
-                                    <h5>Filtrer le nombres d'étoiles :</h5>
-                                    <p>
-                                        <label for="amount">Nombre d'étoiles :</label>
-                                        <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                                    </p>
-                                
-                                    <div id="slider-range"></div>
-                                </div>
+                    <div class="container-fluid">
+                    <!-- Menu -->
+                        <header class="row">
+                            <!-- logo -->
+                            <div class="col-sm-3 text-center img">
+                                <img src="img/logo.png" alt="logo_onResTôt" class="img-responsive">
                             </div>
-                        </div> 
-                        <!-- champs de recherche -->
-                        <div class="col-md-6 text-center" id="search">
-                            <div class="text-center">
+                            <!-- Title -->
+                            <div class="col-sm-6 text-center title">
+                                <h1>onResTôt</h1>
+                            </div>
+                            <!-- refresh button -->
+                            <div class="col-sm-3 text-center">
+                                <button id="refresh" class="btn-action">Actualiser</button>
+                            </div>
+                        </header>
+                        <div class="row" id="menu">
+                            <div class="col-md-6 col-md-offset-3" id="search">
+                                <!-- champs de recherche -->
                                 <form role="search">
                                     <input type="search" name="q" placeholder="Votre recherche :" id="autocompleteId" aria-label="Search through site content">
                                 </form>
                                 <a href="">OK</a>
                             </div>
                         </div>
-                    
-                   
-                    </div>
-                <!-- infos restaurants : Nom, étoiles, photo, adresse, commentaires (nom, nombre d'étoiles, le commentaire) -->
-                    <div class="row" id="restautants">
-
-                    </div>
-                    <div class="row text-center">
-                <!-- boutton ajouter un restaurant -->
-                        <button id="addComment" class="btn-action add">Ajouter un commentaire</button>
+                        <div class="row" id="filter">
+                        <!-- filtre -->
+                            <div class="col-xs-12 col-md-3 text-center">
+                                <h4>Filtrer le nombres d'étoiles :</h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 choose">
+                                <p>
+                                    <label for="amount">Nombre d'étoiles :</label>
+                                    <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                                </p>
+                        
+                                <div id="slider-range"></div>
+                            </div>
+                        </div>
+                    <!-- infos restaurants : Nom, étoiles, photo, adresse, commentaires (nom, nombre d'étoiles, le commentaire) -->
+                        <div class="row" id="restautants">
+                        
+                        </div>
+                        <div class="row text-center">
+                            <!-- boutton ajouter un restaurant -->
+                            <button id="addComment" class="btn-action add">Ajouter un commentaire</button>
+                        </div>
                     </div>
                 </div>
             <!-- partie droite : les restaurants représenté sur Google Maps -->
