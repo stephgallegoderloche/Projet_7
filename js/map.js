@@ -4,141 +4,85 @@
  */
 
 class MyMap  {
-    constructor(){
-        this.map
-        this.restaurants    = [] 
-        this.infoWindow
-        this.markers 
-    }
-    
-}
-maMap = new MyMap()
-
-/**
- * Initailse la map en la centrant par défaut sur Paris
- */
-
-var map, infoWindow;
-
-function initMap() {
-    
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {
-            lat: -34.397,
-            lng: 150.644
-        },
-        zoom: 13
-    });
-    infoWindow = new google.maps.InfoWindow;
-
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-            //My Position
-            var marker = new google.maps.Marker({
-                position: pos,
-                map: map,
-                title: "Vous êtes ici",
-                animation: google.maps.Animation.DROP,
-                icon: 'img/my-location.png'
-            })
-             
-            
-            infoWindow.open(map);
-            map.setCenter(pos);
-        }, 
-        
-         () =>{
-            handleLocationError(true, infoWindow, map.getCenter());
-        });
-    } else {
-        // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
-    }
-    /*() => {*/
-      /*  console.log("ouiiiiiii")*/
-/*
-    // Création d'une requête HTTP
-    var req = new XMLHttpRequest();
-    // Requête HTTP GET synchrone vers le fichier langages.txt publié localement
-    req.open("GET", "http://localhost/json/restaurant.json", false);
-    // Envoi de la requête
-    req.send(null);
-    // Affiche la réponse reçue pour la requête
-*/
-    // Exécute un appel AJAX GET
-    // Prend en paramètres l'URL cible et la fonction callback appelée en cas de succès
-    
-    //Rechercher le nom de tous les restaurants dans le fichier JSON
-    ajaxGet("http://localhost/json/restaurant.json", function (reponse) {
-        // Transforme la réponse en tableau d'objets JavaScript
-        var restaurants = JSON.parse(reponse);
-        var viewRestaurants = document.getElementById("restaurants");
-        // Affiche le titre de chaque restaurant
-
-        restaurants.forEach(function (restaurant) {
-            let resto = new Restaurant(restaurant)
-            maMap.restaurants.push(resto)
-            resto.creatRestaurantView()
-        });
-
-        console.log(maMap.restaurants)
-        maMap.restaurants.forEach((restaurant) => {
-                
-            var pos = {
-            lat: restaurant.position.lat,
-            lng: restaurant.position.lng
-            };
-
-            var titleInfo = `${restaurant.name} ${restaurant.average}`
-            var markerResto = new google.maps.Marker({
-                map: map,
-                restaurant: restaurant,
-                position: pos,
-                title: titleInfo,
-                animation: google.maps.Animation.DROP,
-                icon: 'img/resto-location.png',
-            })
-            
-        }) 
-
-    });
-        
-    
-}
-
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(browserHasGeolocation ?
-        'Error: Le service de Geolocation a échoué.' :
-        'Error: Votre navigateur ne supporte pas la géolocalisation.');
-    infoWindow.open(map);
-}
-
-
-
-//-----------------------------------------------------------------------------------------
-/**
-
-*/
-
-function ajaxGet(url, callback) {
-    var restaurants = new XMLHttpRequest();
-    restaurants.open("GET", url);
-    restaurants.addEventListener("load", function () {
-        if (restaurants.status >= 200 && restaurants.status < 400) {
-            // Appelle la fonction callback en lui passant la réponse de la requête
-            callback(restaurants.responseText);
-        } else {
-            console.error(restaurants.status + " " + restaurants.statusText + " " + url);
+    constructor(mapElement) {
+        this.mapElement = mapElement;
+        this.map;
+        this.restaurants = [] 
+        this.infoWindow = new google.maps.InfoWindow;
+        this.markers = []
+        this.defaultMapParams = {
+            center: {
+                // Paris
+                lat: -34.397,
+                lng: 150.644
+            },
+            zoom: 13
         }
-    });
-    restaurants.addEventListener("error", function () {
-        console.error("Erreur réseau avec l'URL " + url);
-    });
-    restaurants.send(null);
+
+        this.initMap();
+    }
+    
+    reset() {
+        this.markers.forEach(m => m.setMap(null));
+        this.markers = [];
+        this.restaurants = [];
+    }
+
+    addRestaurant(restaurant) {
+        this.restaurants.push(restaurant)
+
+        const markerResto = this.addMarker({
+            restaurant: restaurant,
+            position: {
+                lat: restaurant.position.lat,
+                lng: restaurant.position.lng
+            },
+            title: restaurant.getLabel(),
+            animation: google.maps.Animation.DROP,
+            icon: 'img/resto-location.png',
+        })
+
+        this.markers.push(markerResto);
+    }
+
+    addMarker(options) {
+        return new google.maps.Marker({ ...options, map: this.map });
+    }
+
+    initMap() {
+        this.map = new google.maps.Map(this.mapElement, this.defaultMapParams);
+        
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    //My Position
+                    var marker = this.addMarker({
+                        position: pos,
+                        title: "Vous êtes ici",
+                        animation: google.maps.Animation.DROP,
+                        icon: 'img/my-location.png'
+                    })
+
+                    this.infoWindow.open(this.map);
+                    this.map.setCenter(pos);
+                },
+
+                () => this.handleLocationError(true, this.map.getCenter()));
+        } else {
+            // Browser doesn't support Geolocation
+            this.handleLocationError(false, this.map.getCenter());
+        }
+    }
+
+    handleLocationError(browserHasGeolocation, pos) {
+        this.infoWindow.setPosition(pos);
+        this.infoWindow.setContent(browserHasGeolocation ?
+            'Error: Le service de Geolocation a échoué.' :
+            'Error: Votre navigateur ne supporte pas la géolocalisation.');
+        this.infoWindow.open(this.map);
+    }
 }

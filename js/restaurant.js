@@ -21,9 +21,15 @@ class Restaurant {
                                   }
         this.average            = this.getAverageFromRating()
         this.element            = document.getElementById(data.id)
+
+        this.creatRestaurantView();
+    }
+    getLabel() {
+        return `${this.name} ${this.average}`;
     }
     getAverageFromRating() {
         let score = 0
+
         this.ratings.forEach((ratings) => {
             score += ratings.stars
         })
@@ -38,16 +44,33 @@ class Restaurant {
     
     creatRestaurantView() {
         var viewRestaurant = document.createElement("div");
+
         viewRestaurant.setAttribute('class', 'restaurant');
         viewRestaurant.innerHTML = `<div>` + this.printRatings + `< /div>`
            
     }
-    printRatings(){
-        
+    printRatings(){  
         let string =""
-    this.ratings.forEach((rating) => {
-        spring += ` < div class = "col-md-12 ratingsStars text-bold" > $ {this.stars} < /div> <div class = "col-md-12 ratingsComment" > $ {this.comment} < /div>`
-    })
+
+        this.ratings.forEach((rating) => {
+            spring += ` < div class = "col-md-12 ratingsStars text-bold" > $ {this.stars} < /div> <div class = "col-md-12 ratingsComment" > $ {this.comment} < /div>`
+        })
     return string
     }
+    starsAverageRestaurant() {
+        let note = this.average
+
+        for ( var i = 1; i < 5; i++){
+            if ( i > note ){
+                `<img src="img/starOk.png" alt="logo_onResTôt" class="img-responsive" `
+            }else{
+                if ( note > i + 0.5 ){
+                    `<img src="img/star.png" alt="logo_onResTôt" class="img-responsive" `
+                }else{
+                    `<img src="img/starMid.png" alt="logo_onResTôt" class="img-responsive" `
+                }
+            }               
+        }
+    }
 }
+
