@@ -6,6 +6,8 @@
 class App {
     constructor() {
         this.map = new MyMap(document.getElementById('map'))
+        this.liste = new RestaurantListe(document.getElementById('restautants'))
+
         this.restaurants = []
 
         this.fetchRestaurants();
@@ -29,6 +31,7 @@ class App {
 
     setFilter(filters) {
         this.map.reset();
+        this.liste.reset();
 
         this.restaurants
             .filter(r => {
@@ -40,7 +43,9 @@ class App {
     }
 
     addRestaurant(restaurant) {
+        
         this.map.addRestaurant(restaurant);
+        this.liste.addRestaurant(restaurant)
     }
 
     fetchRestaurants() {

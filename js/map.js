@@ -13,8 +13,8 @@ class MyMap  {
         this.defaultMapParams = {
             center: {
                 // Paris
-                lat: -34.397,
-                lng: 150.644
+                lat: 48.8534100,
+                lng: 2.3488000
             },
             zoom: 13
         }
