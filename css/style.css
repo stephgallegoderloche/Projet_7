@@ -144,7 +144,7 @@ input[type=search] {
 /* -------------------Affichage des restaurant---------------- */
 .restaurant {
     border-bottom: 1px solid #a3a3e9;
-    height: 5em;
+    
 }
 .restaurantName{
     font-weight: 700;
