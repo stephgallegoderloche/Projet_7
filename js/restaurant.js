@@ -86,12 +86,12 @@ class Restaurant {
         return [1,2,3,4,5].map(i =>{
             debugger
             if ( i <= note ){
-               return `<img src="img/starOk.png" alt="logo_onResTôt" class="img-responsive"> `
+               return `<img src="img/starOk.png" alt="logo_onResTôt" class="stars"> `
             }else{
                 if ( note <= i -0.5 ){
-                   return `<img src="img/starMid.png" alt="logo_onResTôt" class="img-responsive"> `
+                   return `<img src="img/starMid.png" alt="logo_onResTôt" class="stars"> `
                 }else{
-                   return `<img src="img/star.png" alt="logo_onResTôt" class="img-responsive"> `
+                   return `<img src="img/star.png" alt="logo_onResTôt" class="stars"> `
                 }
             }
         }).join("")

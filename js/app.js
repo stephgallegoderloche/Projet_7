@@ -58,6 +58,17 @@ class App {
         });
     }
 
+    /**
+     * Bouton pour rafraichir la page
+     
+    refresh() {
+        let button = document.getElementById('refresh')
+        
+        this.button.addEventListener('click', function () {
+            window.location.reload();
+        })
+    }
+*/
     ajaxGet(url, callback) {
         var restaurants = new XMLHttpRequest();
         restaurants.open("GET", url);
