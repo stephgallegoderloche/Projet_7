@@ -45,7 +45,7 @@ header > div > button{
 /* -------------------menu------------------------------------ */
 /* ---général---*/
 #menu{
-    background: #cbcbcb;
+    background: #e2e2e2;
     padding: 1.1em;
 }
 /* ---filter---*/
@@ -144,12 +144,19 @@ input[type=search] {
 /* -------------------Affichage des restaurant---------------- */
 .restaurant {
     border-bottom: 1px solid #a3a3e9;
-    
 }
-.restaurantName{
+/* nom du restaurant*/
+.title > h2{
     font-weight: 700;
-    font-size: 20px;
+    cursor: pointer;
+    line-height: 30px;
+}
+.title > h2:hover {
     color: #a3a3e9;
+}
+/* note moyenne du restaurant*/
+.allStars{
+    margin-bottom: 10px;
 }
 /* -------------------Affichage de la MAP--------------------- */
 #map{

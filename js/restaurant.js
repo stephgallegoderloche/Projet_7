@@ -13,12 +13,13 @@
 class Restaurant {
     constructor(data) {
         this.name               = data.restaurantName
-        this.adress             = data.adress
+        this.adress             = data.address
         this.ratings            = data.ratings
         this.position           = {
                                     lat: data.lat,
                                     lng: data.long
                                   }
+        
         this.average            = this.getAverageFromRating()
         this.element            = document.getElementById(data.id)
 
@@ -48,10 +49,10 @@ class Restaurant {
         viewRestaurant.setAttribute('class', 'restaurant row');
         viewRestaurant.innerHTML = `<div class="col-md-8"> 
                                         <div class="row">
-                                            <div class="col-md-12">
-                                                ${this.name}
+                                            <div class="col-md-12 title ">
+                                                <h2> ${this.name} </h2>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-12 allStars">
                                                 ${this.starsAverageRestaurant(this.average)}
                                             </div>
                                         </div>
@@ -61,34 +62,121 @@ class Restaurant {
         let detail = this.creatRestaurantDetail()
         
         viewRestaurant.appendChild(detail)
-        viewRestaurant.addEventListener("click", _ => {
+        $(viewRestaurant).find('h2').on("click", _ => {
             detail.style.display = (detail.style.display == 'block')? 'none' : 'block'
          })
        return viewRestaurant
     }
+
+    createButton(){
+        
+        let button = document.createElement("button")
+        button.setAttribute('class','btn-action add') 
+        button.innerHTML=`Ajouter un commentaire`
+        button.addEventListener('click', event => {
+            event.preventDefault()
+            event.stopPropagation()
+            let form = this.createFormulaire()
+            $(event.target).closest('.detail').append(form) 
+        })
+        return button
+    }
+    createAddComments() {
+        let button = document.createElement("button")
+        button.setAttribute('class', 'btn-action add')
+        button.innerHTML = `Valider`
+        button.addEventListener('click', event => {
+            /* closest : permet de retrouver le parent le plus proche*/ 
+            event.preventDefault()
+            let form$ = $(button).closest('form')
+            let stars = (form$).find('input:checked').val()/*donne ma note*/
+            let comment = (form$).find('textarea').val().trim()/*donne le commentaire*/
+            
+            this.ratings.push({stars,comment})
+            this.reloadComment(form$.closest('.detail').find('.comment'))
+            form$.remove()           
+        })
+        
+        return button
+    }
+    reloadComment(element){
+        $(element).html(this.printRatings())
+    }
+
+    createFormulaire(){
+        let element = document.createElement("div")
+        element.setAttribute('class', 'col-md-12 formulaire') 
+        let form = document.createElement('form')
+
+        form.innerHTML = `  <fieldset>
+                                <legend>Formulaire :</legend>
+
+                                <div>
+                                    <input type="radio" 
+                                        name="drone" value="1" checked />
+                                    <label for="huey">Huey</label>
+                                </div>
+
+                                <div>
+                                    <input type="radio"
+                                        name="drone" value="2" />
+                                    <label for="dewey">Dewey</label>
+                                </div>
+
+                                <div>
+                                    <input type="radio"
+                                        name="drone" value="3" />
+                                    <label for="louie">3 etoile</label>
+                                </div>
+                                <div>
+                                    <input type="radio"
+                                        name="drone" value="4" />
+                                    <label for="louie">3 etoile</label>
+                                </div>
+                                <div>
+                                    <input type="radio"
+                                        name="drone" value="5" />
+                                    <label for="louie">3 etoile</label>
+                                </div>
+
+                            </fieldset>
+                            <textarea name="textarea" rows="10" cols="50">
+                                    Vous pouvez écrire quelque
+                                    chose ici votre commentaire.
+                            </textarea> 
+                          `
+        form.appendChild(this.createAddComments())
+        return form
+    }
+
     creatRestaurantDetail(){
         let detail = document.createElement("div")
-        detail.innerHTML = `<div class="col-md-12">
-                                                ${this.adress}
-                                            </div>`
+        detail.setAttribute('class', 'detail')
+        detail.innerHTML = `<div class="col-md-12 comment">
+                                ${this.printRatings()}
+                            </div>
+                            `
+        let button = this.createButton()
+        detail.appendChild(button)
         detail.style.display = 'none'
         return(detail)
     }
     printRatings(){  
-        let string =""
+        let string =" "
 
         this.ratings.forEach((rating) => {
-            spring += `<div class="col-md-12 ratingsStars text-bold"> ${this.starsAverageRestaurant(this.average)} </div> <div class="col-md-12 ratingsComment"> ${this.comment} </div>`
+           string += `<div class="col-md-12 ratingsStars"> ${this.starsAverageRestaurant(rating.stars)} </div> <div class="col-md-12 ratingsComment text-bold"> ${rating.comment} </div>`
         })
+       
     return string
     }
     starsAverageRestaurant(note) {
         return [1,2,3,4,5].map(i =>{
-            debugger
+            
             if ( i <= note ){
                return `<img src="img/starOk.png" alt="logo_onResTôt" class="stars"> `
             }else{
-                if ( note <= i -0.5 ){
+                if ( note == i - 0.5 ){
                    return `<img src="img/starMid.png" alt="logo_onResTôt" class="stars"> `
                 }else{
                    return `<img src="img/star.png" alt="logo_onResTôt" class="stars"> `
