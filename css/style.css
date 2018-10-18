@@ -156,7 +156,26 @@ input[type=search] {
 }
 /* note moyenne du restaurant*/
 .allStars{
+    margin-top: 20px;
     margin-bottom: 10px;
+    line-height: 30px;
+}
+/* adresse du restaurant*/
+.address{
+    margin-bottom: 10px;
+}
+/* commentaires du restaurant*/
+
+.comments>h4{
+    padding: 15px;
+    background-color: #c0c0e9;
+    font-weight: bold;
+}
+.comment{
+    padding: 10px 0 10px 50px;
+}
+.comment:nth-child(odd){
+    background-color: #e2e2e2
 }
 /* -------------------Affichage de la MAP--------------------- */
 #map{

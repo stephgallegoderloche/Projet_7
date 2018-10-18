@@ -13,7 +13,7 @@
 class Restaurant {
     constructor(data) {
         this.name               = data.restaurantName
-        this.adress             = data.address
+        this.address             = data.address
         this.ratings            = data.ratings
         this.position           = {
                                     lat: data.lat,
@@ -49,11 +49,14 @@ class Restaurant {
         viewRestaurant.setAttribute('class', 'restaurant row');
         viewRestaurant.innerHTML = `<div class="col-md-8"> 
                                         <div class="row">
-                                            <div class="col-md-12 title ">
+                                            <div class="col-md-6 title ">
                                                 <h2> ${this.name} </h2>
                                             </div>
-                                            <div class="col-md-12 allStars">
+                                            <div class="col-md-6 allStars">
                                                 ${this.starsAverageRestaurant(this.average)}
+                                            </div>
+                                            <div class="col-md-12 address">
+                                                ${this.address}
                                             </div>
                                         </div>
                                     </div>
@@ -93,7 +96,7 @@ class Restaurant {
             let comment = (form$).find('textarea').val().trim()/*donne le commentaire*/
             
             this.ratings.push({stars,comment})
-            this.reloadComment(form$.closest('.detail').find('.comment'))
+            this.reloadComment(form$.closest('.detail').find('.comments'))
             form$.remove()           
         })
         
@@ -105,7 +108,7 @@ class Restaurant {
 
     createFormulaire(){
         let element = document.createElement("div")
-        element.setAttribute('class', 'col-md-12 formulaire') 
+        element.setAttribute('class', 'row formulaire') 
         let form = document.createElement('form')
 
         form.innerHTML = `  <fieldset>
@@ -151,8 +154,9 @@ class Restaurant {
 
     creatRestaurantDetail(){
         let detail = document.createElement("div")
-        detail.setAttribute('class', 'detail')
-        detail.innerHTML = `<div class="col-md-12 comment">
+        detail.setAttribute('class', 'row detail')
+        detail.innerHTML = `<div class="col-md-12 comments">
+                                <h4> Commentaires :</h4>
                                 ${this.printRatings()}
                             </div>
                             `
@@ -165,7 +169,14 @@ class Restaurant {
         let string =" "
 
         this.ratings.forEach((rating) => {
-           string += `<div class="col-md-12 ratingsStars"> ${this.starsAverageRestaurant(rating.stars)} </div> <div class="col-md-12 ratingsComment text-bold"> ${rating.comment} </div>`
+            string += ` <div class="row comment">
+                            <div class="col-md-12 ratingsStars"> 
+                                ${this.starsAverageRestaurant(rating.stars)} 
+                            </div> 
+                            <div class="col-md-12 ratingsComment text-bold"> 
+                                ${rating.comment} 
+                            </div>
+                        </div>`
         })
        
     return string
