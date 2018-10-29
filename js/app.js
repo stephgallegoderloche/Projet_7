@@ -43,7 +43,7 @@ class App {
             .forEach(r => this.addRestaurant(r));
     }
 
-    addRestaurant(restaurant) {
+    addRestaurant(restaurant,index) {
         
         this.map.addRestaurant(restaurant);
         this.liste.addRestaurant(restaurant)
@@ -55,7 +55,7 @@ class App {
             this.restaurants = JSON.parse(response).map(r => new Restaurant(r));
             // var viewRestaurants = document.getElementById("restaurants");
             // Affiche le titre de chaque restaurant
-            this.restaurants.forEach(r => this.addRestaurant(r));
+            this.restaurants.forEach( (r,index) => this.addRestaurant(r,index));
         });
     }
 

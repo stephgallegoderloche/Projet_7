@@ -7,8 +7,6 @@
  * @param {string} (name)         Le nom du restaurant
  * @param {string} (adress)       L' adresse du restaurant
  * @param {number} (average)      La note moyenne du restaurant
- * @param {object} (photos)       Photo retourné par l' API du restaurant
- * @param {object} (commentsJson) Indique si le restaurant est à prendre dans la base JSON ou dans l'API
  */
 class Restaurant {
     constructor(data) {
@@ -19,11 +17,12 @@ class Restaurant {
                                     lat: data.lat,
                                     lng: data.long
                                   }
-        
+        this.viewComments       = false
         this.average            = this.getAverageFromRating()
-        this.element            = document.getElementById(data.id)
+        this.restaurantView     = document.createElement("div");
 
         this.creatRestaurantView();
+    
     }
     getLabel() {
         return `${this.name} ${this.average}`;
@@ -37,22 +36,16 @@ class Restaurant {
         let average = score / this.ratings.length
         return average
     }
-    getElement() {
-        this.element.addEventListener("click", () => {
-
-        })
-    }
     
     creatRestaurantView() {
-        const viewRestaurant = document.createElement("div");
 
-        viewRestaurant.setAttribute('class', 'restaurant row');
-        viewRestaurant.innerHTML = `<div class="col-md-8"> 
+        this.restaurantView.setAttribute('class', 'restaurant row');
+        this.restaurantView.innerHTML = `<div class="col-md-8"> 
                                         <div class="row">
                                             <div class="col-md-6 title ">
                                                 <h2> ${this.name} </h2>
                                             </div>
-                                            <div class="col-md-6 allStars">
+                                            <div class="col-md-6 allStars" >
                                                 ${this.starsAverageRestaurant(this.average)}
                                             </div>
                                             <div class="col-md-12 address">
@@ -64,11 +57,12 @@ class Restaurant {
 
         let detail = this.creatRestaurantDetail()
         
-        viewRestaurant.appendChild(detail)
-        $(viewRestaurant).find('h2').on("click", _ => {
-            detail.style.display = (detail.style.display == 'block')? 'none' : 'block'
+        this.restaurantView.appendChild(detail)
+        $(this.restaurantView).find('h2').on("click", _ => {
+            this.viewComments = (detail.style.display != 'block')
+            detail.style.display = ( !this.viewComments) ? 'none' : 'block'
          })
-       return viewRestaurant
+       return this.restaurantView
     }
 
     createButton(){
@@ -79,8 +73,12 @@ class Restaurant {
         button.addEventListener('click', event => {
             event.preventDefault()
             event.stopPropagation()
-            let form = this.createFormulaire()
-            $(event.target).closest('.detail').append(form) 
+            
+            let detail$ = $(event.target).closest('.detail')
+            if (!detail$.find('form').length){
+                let form = this.createFormulaire()
+                detail$.append(form) 
+            }
         })
         return button
     }
@@ -92,11 +90,15 @@ class Restaurant {
             /* closest : permet de retrouver le parent le plus proche*/ 
             event.preventDefault()
             let form$ = $(button).closest('form')
-            let stars = (form$).find('input:checked').val()/*donne ma note*/
+            let stars = Number((form$).find('input:checked').val())/*donne ma note*/
             let comment = (form$).find('textarea').val().trim()/*donne le commentaire*/
             
             this.ratings.push({stars,comment})
-            this.reloadComment(form$.closest('.detail').find('.comments'))
+           
+            this.average = this.getAverageFromRating() 
+            console.log(this)
+            
+            this.creatRestaurantView()
             form$.remove()           
         })
         
@@ -104,12 +106,18 @@ class Restaurant {
     }
     reloadComment(element){
         $(element).html(this.printRatings())
+        
     }
+    reloadAverage(note){
 
+        let element = $('.allStars')
+        console.log(element)
+    }
     createFormulaire(){
         let element = document.createElement("div")
         element.setAttribute('class', 'row formulaire') 
         let form = document.createElement('form')
+        form.setAttribute('class','col-md-12')
 
         form.innerHTML = `  <fieldset>
                                 <legend>Formulaire :</legend>
@@ -148,8 +156,9 @@ class Restaurant {
                                     chose ici votre commentaire.
                             </textarea> 
                           `
+        element.appendChild(form)
         form.appendChild(this.createAddComments())
-        return form
+        return element
     }
 
     creatRestaurantDetail(){
@@ -162,9 +171,10 @@ class Restaurant {
                             `
         let button = this.createButton()
         detail.appendChild(button)
-        detail.style.display = 'none'
+        detail.style.display = (this.viewComments) ? 'block' : 'none'
         return(detail)
     }
+    
     printRatings(){  
         let string =" "
 
@@ -196,22 +206,3 @@ class Restaurant {
         }).join("")
     }
 }
-
-/*
-# TO DO !!!!!
-Utiliser streetView pour récupérer l'image:
-    - inclure dans le construc du restaurant
-
-Afficher les restaurants:
-    Nom du restaurant
-    MoyenneEtoile              Image
-
-    au click sur le nom du restaurant :
-        - lancer une function qui affiche les commentaires
-
-        étoile                  Texte
-
-        Ajout d'un bouton "Ajouter un avis":
-            function ouvrir un formulaire
-
-*/
