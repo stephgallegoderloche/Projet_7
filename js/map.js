@@ -4,12 +4,14 @@
  */
 
 class MyMap  {
-    constructor(mapElement) {
-        this.mapElement = mapElement;
-        this.map;
+    constructor(mapElement, onClickMarker) {
+        this.mapElement = mapElement
+        this.onClickMarker = onClickMarker
+        this.onClickMap = onClickMap
         this.restaurants = [] 
         this.infoWindow = new google.maps.InfoWindow
         this.geocoder   = new google.maps.Geocoder
+    
         this.markers = []
         this.defaultMapParams = {
             center: {
@@ -39,13 +41,35 @@ class MyMap  {
                 lng: restaurant.position.lng
             },
             title: restaurant.getLabel(),
+            //content: restaurant.getLabel(),
             animation: google.maps.Animation.DROP,
             icon: 'img/resto-location.png',
         })
 
         this.markers.push(markerResto);
+        markerResto.addListener('click',  _=>this.selectRestaurant(restaurant));
     }
+    onSelectRestaurant(restaurant){
+        //this.imgStreetView(restaurant)
+        this.infoWindow.setContent(`<span> ${restaurant.name} </span><span> ${restaurant.address} </span>`)
+        this.infoWindow.open(this.map,this.markers.find(m=>m.restaurant.address === restaurant.address));
+    }
+    
+//afficher une image grace a streetView
+    imgStreetView() {
+        var request = {
+            query: 'Museum of Contemporary Art Australia',
+            fields: ['photos', 'formatted_address', 'name', 'rating', 'opening_hours', 'geometry'],
+        };
 
+        this.placesService.findPlaceFromQuery(request, viewPlaces());
+    }
+    selectRestaurant(restaurant){
+        if (typeof (this.onClickMarker)=== 'function'){
+            
+            this.onClickMarker(restaurant)
+        }
+    }
     addMarker(options) {
         return new google.maps.Marker({ ...options, map: this.map });
     }
@@ -79,7 +103,7 @@ class MyMap  {
     initMap() {
         this.map = new google.maps.Map(this.mapElement, this.defaultMapParams);
         this.addMyPosition()
-        
+        //this.placesService = new google.maps.PlacesService(this.map);
         google.maps.event.addListener(this.map, 'click', event => this.onClick(event))
         
     }
@@ -113,4 +137,6 @@ class MyMap  {
         this.infoWindow.open(this.map);
     }
     
+
+
 }

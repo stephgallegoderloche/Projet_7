@@ -5,8 +5,11 @@
 
 class App {
     constructor() {
-        this.map = new MyMap(document.getElementById('map'))
-        this.liste = new RestaurantListe(document.getElementById('restautants'))
+        this.map = new MyMap(document.getElementById('map'),
+                            restaurant =>this.selectRestaurant(restaurant) )
+        this.liste = new RestaurantListe(document.getElementById('restautants'),
+                            restaurant => this.selectRestaurant(restaurant))
+            
 
         this.restaurants = []
 
@@ -14,7 +17,13 @@ class App {
         this.initFilters();
         this.refresh();
     }
+    //function appeler quand click
+    selectRestaurant(restaurant){
+        
+        this.map.onSelectRestaurant(restaurant)
+        this.liste.onSelectRestaurant(restaurant)
 
+    }
     initFilters() {
         $("#slider-range").slider({
             range: true,
@@ -58,18 +67,6 @@ class App {
             this.restaurants.forEach( (r,index) => this.addRestaurant(r,index));
         });
     }
-
-    /**
-     * Bouton pour rafraichir la page
-     */
-    refresh() {
-        let button = document.getElementById('refresh')
-        
-        button.addEventListener('click', function () {
-            window.location.reload();
-        })
-    }
-
     ajaxGet(url, callback) {
         var restaurants = new XMLHttpRequest();
         restaurants.open("GET", url);
@@ -86,6 +83,17 @@ class App {
         });
         restaurants.send(null);
     }
+    /**
+     * Bouton pour rafraichir la page
+     */
+    refresh() {
+        let button = document.getElementById('refresh')
+
+        button.addEventListener('click', function () {
+            window.location.reload();
+        })
+    }
+
 }
 
 function initApp() {

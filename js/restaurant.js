@@ -1,8 +1,7 @@
 /**
  * Nos restaurants
  * @constructor
- * @return { object}            L ' objet restaurant
- * 
+ * @return { object}              L ' objet restaurant
  * @param {object} (position)     La latitude et longitude du restaurant
  * @param {string} (name)         Le nom du restaurant
  * @param {string} (adress)       L' adresse du restaurant
@@ -37,7 +36,7 @@ class Restaurant {
         return average
     }
     
-    creatRestaurantView() {
+    creatRestaurantView(onClick) {
 
         this.restaurantView.setAttribute('class', 'restaurant row');
         this.restaurantView.innerHTML = `<div class="col-md-8"> 
@@ -53,18 +52,29 @@ class Restaurant {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4"> ${this.img}</div> `
+                                    <div class="col-md-4 class="imgStreetView"></div> `
 
         let detail = this.creatRestaurantDetail()
         
         this.restaurantView.appendChild(detail)
-        $(this.restaurantView).find('h2').on("click", _ => {
-            this.viewComments = (detail.style.display != 'block')
-            detail.style.display = ( !this.viewComments) ? 'none' : 'block'
-         })
+        $(this.restaurantView).find('h2').on("click", _ =>{
+            if (typeof (onClick) === 'function') {
+                onClick(this)
+            }
+        })
        return this.restaurantView
     }
-
+    viewDetailsComments() {
+        let detail$ = $(this.restaurantView).find('.detail')
+        this.viewComments = !detail$.is(':visible')
+        detail$.toggle(this.viewComments)
+        
+    }
+    closeDetailComment(){
+        let detail$ = $(this.restaurantView).find('.detail')
+        this.viewComments =false
+        detail$.hide()
+    }
     createButton(){
         
         let button = document.createElement("button")
@@ -109,51 +119,45 @@ class Restaurant {
         
     }
     reloadAverage(note){
-
         let element = $('.allStars')
-        console.log(element)
     }
     createFormulaire(){
         let element = document.createElement("div")
-        element.setAttribute('class', 'row formulaire') 
+        element.setAttribute('class', 'col-md-12 formulaire') 
         let form = document.createElement('form')
-        form.setAttribute('class','col-md-12')
-
         form.innerHTML = `  <fieldset>
-                                <legend>Formulaire :</legend>
-
-                                <div>
+                                <legend>Donner une note au restaurant :</legend>
+                                <div class="note">
                                     <input type="radio" 
-                                        name="drone" value="1" checked />
-                                    <label for="huey">Huey</label>
+                                        name="stars" value="1" checked />
+                                    <label class="radio-label"> 1</label>
                                 </div>
-
-                                <div>
+                                <div class="note">
                                     <input type="radio"
-                                        name="drone" value="2" />
-                                    <label for="dewey">Dewey</label>
+                                        name="stars" value="2" />
+                                    <label class="radio-label"> 2</label>
                                 </div>
-
-                                <div>
+                                <div class="note">
                                     <input type="radio"
-                                        name="drone" value="3" />
-                                    <label for="louie">3 etoile</label>
+                                        name="stars" value="3" />
+                                    <label class="radio-label"> 3</label>
                                 </div>
-                                <div>
+                                <div class="note">
                                     <input type="radio"
-                                        name="drone" value="4" />
-                                    <label for="louie">3 etoile</label>
+                                        name="stars" value="4" />
+                                    <label class="radio-label"> 4</label>
                                 </div>
-                                <div>
+                                <div class="note">
                                     <input type="radio"
-                                        name="drone" value="5" />
-                                    <label for="louie">3 etoile</label>
+                                        name="stars" value="5" />
+                                    <label class="radio-label"> 5</label>
                                 </div>
-
                             </fieldset>
-                            <textarea name="textarea" rows="10" cols="50">
-                                    Vous pouvez écrire quelque
-                                    chose ici votre commentaire.
+                            <div class="title">
+                            <h4>Laisser un commentaire sur le restaurant :</h4>
+                            </div>
+                            <textarea name="textarea" rows="10" cols="50" class="col-md-12">
+                                    Vous pouvez écrire ici votre commentaire sur le restaurant.
                             </textarea> 
                           `
         element.appendChild(form)
@@ -197,7 +201,7 @@ class Restaurant {
             if ( i <= note ){
                return `<img src="img/starOk.png" alt="logo_onResTôt" class="stars"> `
             }else{
-                if ( note == i - 0.5 ){
+                if ( note >= i - 0.5 ){
                    return `<img src="img/starMid.png" alt="logo_onResTôt" class="stars"> `
                 }else{
                    return `<img src="img/star.png" alt="logo_onResTôt" class="stars"> `
