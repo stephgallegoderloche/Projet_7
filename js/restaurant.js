@@ -1,16 +1,12 @@
 /**
- * Nos restaurants
+ * 
  * @constructor
  * @return { object}              L ' objet restaurant
- * @param {object} (position)     La latitude et longitude du restaurant
- * @param {string} (name)         Le nom du restaurant
- * @param {string} (adress)       L' adresse du restaurant
- * @param {number} (average)      La note moyenne du restaurant
  */
 class Restaurant {
     constructor(data) {
         this.name               = data.restaurantName
-        this.address             = data.address
+        this.address            = data.address
         this.ratings            = data.ratings
         this.position           = {
                                     lat: data.lat,
@@ -23,9 +19,12 @@ class Restaurant {
         this.creatRestaurantView();
     
     }
+
+/*Renvoi le nom du restaurant et sa moyenne*/
     getLabel() {
         return `${this.name} ${this.average}`;
     }
+/*Calcul la note moyenne du restaurant*/ 
     getAverageFromRating() {
         let score = 0
 
@@ -35,7 +34,7 @@ class Restaurant {
         let average = score / this.ratings.length
         return average
     }
-    
+/*Créer restaurant / Click sur le nom du restaurant*/
     creatRestaurantView(onClick) {
 
         this.restaurantView.setAttribute('class', 'restaurant row');
@@ -55,8 +54,8 @@ class Restaurant {
                                     <div class="col-md-4 class="imgStreetView"></div> `
 
         let detail = this.creatRestaurantDetail()
-        
         this.restaurantView.appendChild(detail)
+    /*Action au Click sur le nom du restaurant*/
         $(this.restaurantView).find('h2').on("click", _ =>{
             if (typeof (onClick) === 'function') {
                 onClick(this)
@@ -64,22 +63,24 @@ class Restaurant {
         })
        return this.restaurantView
     }
+/*Afficher/cacher les commentaires*/
     viewDetailsComments() {
         let detail$ = $(this.restaurantView).find('.detail')
         this.viewComments = !detail$.is(':visible')
         detail$.toggle(this.viewComments)
         
     }
+/*Cacher les commentaires*/
     closeDetailComment(){
         let detail$ = $(this.restaurantView).find('.detail')
         this.viewComments =false
         detail$.hide()
     }
+/*Bouton ajouter un commentaire*/
     createButton(){
-        
         let button = document.createElement("button")
         button.setAttribute('class','btn-action add') 
-        button.innerHTML=`Ajouter un commentaire`
+        button.innerHTML = `Ajouter un commentaire`
         button.addEventListener('click', event => {
             event.preventDefault()
             event.stopPropagation()
@@ -92,6 +93,7 @@ class Restaurant {
         })
         return button
     }
+/*Bouton qui valide le formulaire ajouter un commentaire*/
     createAddComments() {
         let button = document.createElement("button")
         button.setAttribute('class', 'btn-action add')
@@ -114,13 +116,16 @@ class Restaurant {
         
         return button
     }
+/*Rafraichir les commentaires*/
     reloadComment(element){
         $(element).html(this.printRatings())
         
     }
+/*Rafraichir la moyenne du restaurant*/
     reloadAverage(note){
         let element = $('.allStars')
     }
+/*Création du formulaire d'ajout d'un commentaires*/
     createFormulaire(){
         let element = document.createElement("div")
         element.setAttribute('class', 'col-md-12 formulaire') 
@@ -164,7 +169,7 @@ class Restaurant {
         form.appendChild(this.createAddComments())
         return element
     }
-
+/*Afficher l'élément contenant les commentaires*/
     creatRestaurantDetail(){
         let detail = document.createElement("div")
         detail.setAttribute('class', 'row detail')
@@ -178,7 +183,7 @@ class Restaurant {
         detail.style.display = (this.viewComments) ? 'block' : 'none'
         return(detail)
     }
-    
+/*Afficher les commentaires*/
     printRatings(){  
         let string =" "
 
@@ -195,6 +200,7 @@ class Restaurant {
        
     return string
     }
+/*Afficher les étoiles*/
     starsAverageRestaurant(note) {
         return [1,2,3,4,5].map(i =>{
             

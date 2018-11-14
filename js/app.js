@@ -5,25 +5,22 @@
 
 class App {
     constructor() {
-        this.map = new MyMap(document.getElementById('map'),
-                            restaurant =>this.selectRestaurant(restaurant) )
-        this.liste = new RestaurantListe(document.getElementById('restautants'),
-                            restaurant => this.selectRestaurant(restaurant))
-            
-
-        this.restaurants = []
+        this.map            = new MyMap(document.getElementById('map'),
+                              restaurant =>this.selectRestaurant(restaurant) )
+        this.liste          = new RestaurantListe(document.getElementById('restautants'),
+                              restaurant => this.selectRestaurant(restaurant))
+        this.restaurants    = []
 
         this.fetchRestaurants();
         this.initFilters();
         this.refresh();
     }
-    //function appeler quand click
+/*Fait la liaison entre la map et la liste des restaurants*/
     selectRestaurant(restaurant){
-        
         this.map.onSelectRestaurant(restaurant)
         this.liste.onSelectRestaurant(restaurant)
-
     }
+/*Initialise le filte d'étoiles*/
     initFilters() {
         $("#slider-range").slider({
             range: true,
@@ -38,7 +35,7 @@ class App {
         $("#amount").val($("#slider-range").slider("values", 0) + " étoiles" + "  -  " +
             $("#slider-range").slider("values", 1) + " étoiles");
     }
-
+/*Met a jour la liste des restaurants/marker d'après le filtre*/
     setFilter(filters) {
         this.map.reset();
         this.liste.reset();
@@ -51,18 +48,17 @@ class App {
             })
             .forEach(r => this.addRestaurant(r));
     }
-
+/*Ajoute les restaurants*/
     addRestaurant(restaurant,index) {
         
         this.map.addRestaurant(restaurant);
         this.liste.addRestaurant(restaurant)
     }
-
+/*Récupérer les restaurant du fichier Json*/
     fetchRestaurants() {
         this.ajaxGet("http://localhost/json/restaurant.json", response => {
             // Transforme la réponse en tableau d'objets JavaScript
             this.restaurants = JSON.parse(response).map(r => new Restaurant(r));
-            // var viewRestaurants = document.getElementById("restaurants");
             // Affiche le titre de chaque restaurant
             this.restaurants.forEach( (r,index) => this.addRestaurant(r,index));
         });

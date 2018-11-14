@@ -28,6 +28,9 @@ footer > p{
     padding-left: 0;
     padding-right: 0;
 }
+/*
+    PARTIE GAUCHE (informations restaurants)
+*/
 /* -------------------header---------------------------------- */
 header .img > img{
     height: 50px;
@@ -180,6 +183,9 @@ input[type=search] {
 .comment:nth-child(odd){
     background-color: #e2e2e2
 }
+/*
+    PARTIE FORMULAIRE (note/commentaire)
+*/
 /* Ajouter un commentaires au restaurant*/
 .formulaire>form{
     width: 100%;
@@ -207,7 +213,9 @@ textarea{
     color: #8a8ac4;
     font-weight: 700;
 }
-
+/*
+    PARTIE DROITE (map)
+*/
 /* -------------------Affichage de la MAP--------------------- */
 #map{
     width: 100%;
