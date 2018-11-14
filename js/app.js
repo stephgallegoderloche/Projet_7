@@ -6,9 +6,12 @@
 class App {
     constructor() {
         this.map            = new MyMap(document.getElementById('map'),
-                              restaurant =>this.selectRestaurant(restaurant) )
+                              restaurant =>this.selectRestaurant(restaurant),
+                              (address, latLng) => this.newRestaurant.addNewRestaurant(address,latLng))
         this.liste          = new RestaurantListe(document.getElementById('restautants'),
                               restaurant => this.selectRestaurant(restaurant))
+        this.newRestaurant =  new NewRestaurant(document.getElementById('newrestaurant'),
+                              restaurant => this.addRestaurant(restaurant) )
         this.restaurants    = []
 
         this.fetchRestaurants();
@@ -49,7 +52,7 @@ class App {
             .forEach(r => this.addRestaurant(r));
     }
 /*Ajoute les restaurants*/
-    addRestaurant(restaurant,index) {
+    addRestaurant(restaurant) {
         
         this.map.addRestaurant(restaurant);
         this.liste.addRestaurant(restaurant)

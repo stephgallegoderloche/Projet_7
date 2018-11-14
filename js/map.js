@@ -4,10 +4,10 @@
  */
 
 class MyMap  {
-    constructor(mapElement, onClickMarker) {
+    constructor(mapElement, onClickMarker, onClickMap) {
         this.mapElement         = mapElement
         this.onClickMarker      = onClickMarker
-       // this.onClickMap       = onClickMap
+        this.onClickMap         = onClickMap
         this.restaurants        = [] 
         this.infoWindow         = new google.maps.InfoWindow
         this.geocoder           = new google.maps.Geocoder
@@ -48,22 +48,13 @@ class MyMap  {
     /*Action au Click sur le marker du restaurant*/
         markerResto.addListener('click',  _=>this.selectRestaurant(restaurant));
     }
-/*Informations du restaurant*/
+/*Informations du restaurant sur la map*/
     onSelectRestaurant(restaurant){
         //this.imgStreetView(restaurant)
         this.infoWindow.setContent(`<span> ${restaurant.name} </span><span> ${restaurant.address} </span>`)
         this.infoWindow.open(this.map,this.markers.find(m=>m.restaurant.address === restaurant.address));
     }
-    
-/*afficher une image grace a streetView*/
-    imgStreetView() {
-        var request = {
-            query: 'Museum of Contemporary Art Australia',
-            fields: ['photos', 'formatted_address', 'name', 'rating', 'opening_hours', 'geometry'],
-        };
 
-        this.placesService.findPlaceFromQuery(request, viewPlaces());
-    }
 /*Vérifie le bon restaurant*/
     selectRestaurant(restaurant){
         if (typeof (this.onClickMarker)=== 'function'){
@@ -115,7 +106,9 @@ class MyMap  {
 /*Action du click sur la map */
     onClick(event){
         this.geocodeLatLng(event.latLng, address =>{
-            debugger
+            if(typeof(this.onClickMap) === 'function'){
+                this.onClickMap(address, event.latLng)
+            }
         })
     }
 /*Vérifit et récupère l'adresse trouvé*/
