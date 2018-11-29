@@ -51,7 +51,7 @@ class Restaurant {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 class="imgStreetView"></div> `
+                                    <div class="col-md-4 class="imgStreetView">${this.position.lat}</div> `
 
         let detail = this.creatRestaurantDetail()
         this.restaurantView.appendChild(detail)

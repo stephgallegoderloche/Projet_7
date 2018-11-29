@@ -5,14 +5,22 @@
 
 class App {
     constructor() {
-        this.map            = new MyMap(document.getElementById('map'),
+        this.map            = new MyMap(
+                              /* recherche l'element avec id map */
+                              document.getElementById('map'),
+                              /*quand on selectionne un restaurant */
                               restaurant =>this.selectRestaurant(restaurant),
-                              (address, latLng) => this.newRestaurant.addNewRestaurant(address,latLng))
+                              /*quand on click sur la map on récupère l'adresse et les coordonnées */
+                              (address, latLng) => this.newRestaurant.addNewRestaurant(address,latLng),
+                              /*quand on récupère les restaurants autour de ma position*/
+                              resultsRestaurants => resultsRestaurants.forEach(restaurant => this.addRestaurant(restaurant))
+                              )
         this.liste          = new RestaurantListe(document.getElementById('restautants'),
                               restaurant => this.selectRestaurant(restaurant))
-        this.newRestaurant =  new NewRestaurant(document.getElementById('newrestaurant'),
+        this.newRestaurant  =  new NewRestaurant(document.getElementById('newrestaurant'),
                               restaurant => this.addRestaurant(restaurant) )
         this.restaurants    = []
+        
 
         this.fetchRestaurants();
         this.initFilters();

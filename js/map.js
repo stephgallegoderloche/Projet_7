@@ -4,7 +4,7 @@
  */
 
 class MyMap  {
-    constructor(mapElement, onClickMarker, onClickMap) {
+    constructor(mapElement, onClickMarker, onClickMap, onLocationRestaurant) {
         this.mapElement         = mapElement
         this.onClickMarker      = onClickMarker
         this.onClickMap         = onClickMap
@@ -20,8 +20,10 @@ class MyMap  {
             },
             zoom: 13
         }
-
+        this.onLocationRestaurant = onLocationRestaurant
+        this.events$ = $('<div>')
         this.initMap();
+
     }
     
     reset() {
@@ -60,6 +62,10 @@ class MyMap  {
         if (typeof (this.onClickMarker)=== 'function'){
             
             this.onClickMarker(restaurant)
+            $('html,body').animate({
+                scrollTop: $(restaurant.restaurantView).offset().top
+            }, 'slow');
+        
         }
     }
 /*Ajouter un marker*/
@@ -71,12 +77,15 @@ class MyMap  {
         /*essayer HTML5 geolocation*/
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => {
-                var pos    = {
+                const pos    = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
+                /*trouver les restaurants au tour de moi */
+                this.restaurantsLocationNearbyPosition(pos,'3000')
+                
                 /*Ma Position*/
-                var marker = this.addMarker({
+                const marker = this.addMarker({
                     position: pos,
                     title: "Vous êtes ici",
                     animation: google.maps.Animation.DROP,
@@ -93,11 +102,49 @@ class MyMap  {
             this.handleLocationError(false, this.map.getCenter());
         }
     }
+/*trouver les restaurants au tour de moi */
+    restaurantsLocationNearbyPosition(pos,radius){
+        let location = new google.maps.LatLng(pos.lat, pos.lng)
+        let request = {
+            location,
+            radius,
+            type: ['restaurant']
+        }
+        this.placesService.nearbySearch(request, (results, status) => {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                
+                results.forEach(r=>{
+                    this.placesService.getDetails({
+                        placeId           : r.place_id,
+                        fields            : ['name', 'review']
+                    }, (result, status) => {
+                        if (status == google.maps.places.PlacesServiceStatus.OK) {
+                            let restaurant = new Restaurant({
+                                restaurantName      : r.name,
+                                pos                 : r.geometry.location,
+                                address             : r.vicinity,
+                                lat                 : r.geometry.location.lat(),
+                                long                : r.geometry.location.lng(),
+                                ratings             : result.reviews.map(review =>{
+                                    return {stars : review.rating, comment : review.text}
+                                })
+                            })
+                            this.onLocationRestaurant([restaurant])
+                        }
+                    })
+                    /*TODO transformer pour chaque r appeler le service googleplacedetails et appeler this.onLocationRestaurant([le resultat de]) */
+                    
+                })
+                
+            }
+        })
+        
+    }
 /*initialise la map*/
     initMap() {
         this.map = new google.maps.Map(this.mapElement, this.defaultMapParams);
         this.addMyPosition()
-        //this.placesService = new google.maps.PlacesService(this.map);
+        this.placesService = new google.maps.places.PlacesService(this.map);
 
     /*Action au Click sur la map*/
         google.maps.event.addListener(this.map, 'click', event => this.onClick(event))
