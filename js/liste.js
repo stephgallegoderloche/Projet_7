@@ -17,16 +17,20 @@ class RestaurantListe {
     }
     reset() {
         this.element.innerHTML = ''
-        this.restaurants = []
+        this.restaurants       = []
     }
 /*Affiche le commentaire du restaurant choisit*/
     onSelectRestaurant(restaurant){
         this.closeAllRestaurant()
         restaurant.viewDetailsComments()
+        restaurant.viewImg()
 
     }
 /*Fermer tous les commentaires des restaurants*/
     closeAllRestaurant(){
-        this.restaurants.forEach(r=>r.closeDetailComment())
+        this.restaurants.forEach(r=>{
+            r.closeDetailComment()
+            r.closeImg()
+        })
     }
 }

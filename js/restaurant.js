@@ -7,7 +7,7 @@ class Restaurant {
     constructor(data) {
         this.name               = data.restaurantName
         this.address            = data.address
-        this.ratings            = data.ratings
+        this.ratings            = data.ratings || []
         this.position           = {
                                     lat: data.lat,
                                     lng: data.long
@@ -27,12 +27,10 @@ class Restaurant {
 /*Calcul la note moyenne du restaurant*/ 
     getAverageFromRating() {
         let score = 0
-
         this.ratings.forEach((ratings) => {
             score += ratings.stars
-        })
-        let average = score / this.ratings.length
-        return average
+        })         
+        return !score ? 0 : (score / this.ratings.length)
     }
 /*Créer restaurant / Click sur le nom du restaurant*/
     creatRestaurantView(onClick) {
@@ -41,7 +39,7 @@ class Restaurant {
         this.restaurantView.innerHTML = `<div class="col-md-8"> 
                                         <div class="row">
                                             <div class="col-md-6 title ">
-                                                <h2> ${this.name} </h2>
+                                                <h4> ${this.name} </h4>
                                             </div>
                                             <div class="col-md-6 allStars" >
                                                 ${this.starsAverageRestaurant(this.average)}
@@ -51,12 +49,12 @@ class Restaurant {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 class="imgStreetView">${this.position.lat}</div> `
+                                    <div class="col-md-4 imgStreetView"><img src="https://maps.googleapis.com/maps/api/streetview?location=${this.position.lat},${this.position.lng}&size=200x70&key=AIzaSyCocP7YWpIQdHhF4gmlErpa5fxwEO8T5Fw" alt="image du restaurant"></div> `
 
         let detail = this.creatRestaurantDetail()
         this.restaurantView.appendChild(detail)
     /*Action au Click sur le nom du restaurant*/
-        $(this.restaurantView).find('h2').on("click", _ =>{
+        $(this.restaurantView).find('.title').on("click", _ =>{
             if (typeof (onClick) === 'function') {
                 onClick(this)
             }
@@ -76,10 +74,25 @@ class Restaurant {
         this.viewComments =false
         detail$.hide()
     }
+/*Afficher/cacher les images*/
+    viewImg() {
+        let img$ = $(this.restaurantView).find('.imgStreetView')
+        this.imgview = !img$.is(':visible')
+        img$.toggle(this.imgview)
+
+    }
+/*Cacher les images*/
+    closeImg() {
+        let img$ = $(this.restaurantView).find('.imgStreetView')
+        this.viewComments = false
+        img$.hide()
+    }
 /*Bouton ajouter un commentaire*/
     createButton(){
+        let container = document.createElement('div')
+        container.setAttribute('class', 'col-md-12')
         let button = document.createElement("button")
-        button.setAttribute('class','btn-action add') 
+        button.setAttribute('class','btn-action add center-block') 
         button.innerHTML = `Ajouter un commentaire`
         button.addEventListener('click', event => {
             event.preventDefault()
@@ -91,40 +104,16 @@ class Restaurant {
                 detail$.append(form) 
             }
         })
-        return button
+        container.appendChild(button)
+        return container
     }
-/*Bouton qui valide le formulaire ajouter un commentaire*/
-    createAddComments() {
-        let button = document.createElement("button")
-        button.setAttribute('class', 'btn-action add')
-        button.innerHTML = `Valider`
-        button.addEventListener('click', event => {
-            /* closest : permet de retrouver le parent le plus proche*/ 
-            event.preventDefault()
-            let form$ = $(button).closest('form')
-            let stars = Number((form$).find('input:checked').val())/*donne ma note*/
-            let comment = (form$).find('textarea').val().trim()/*donne le commentaire*/
-            
-            this.ratings.push({stars,comment})
-           
-            this.average = this.getAverageFromRating() 
-            console.log(this)
-            
-            this.creatRestaurantView()
-            form$.remove()           
-        })
-        
-        return button
+
+/*Rafraichir les commentaires et la moyenne du restaurant*/
+    reloadComments(){
+        $(this.restaurantView).find('.commentsItems').html(this.printRatings())
+        $(this.restaurantView).find('.allStars').html(this.starsAverageRestaurant(this.average))
     }
-/*Rafraichir les commentaires*/
-    reloadComment(element){
-        $(element).html(this.printRatings())
-        
-    }
-/*Rafraichir la moyenne du restaurant*/
-    reloadAverage(note){
-        let element = $('.allStars')
-    }
+
 /*Création du formulaire d'ajout d'un commentaires*/
     createFormulaire(){
         let element = document.createElement("div")
@@ -159,15 +148,65 @@ class Restaurant {
                                 </div>
                             </fieldset>
                             <div class="title">
-                            <h4>Laisser un commentaire sur le restaurant :</h4>
+                                <h4>Laisser un commentaire sur le restaurant :</h4>
                             </div>
                             <textarea name="textarea" rows="10" cols="50" class="col-md-12">
                                     Vous pouvez écrire ici votre commentaire sur le restaurant.
                             </textarea> 
                           `
         element.appendChild(form)
-        form.appendChild(this.createAddComments())
+        let container = document.createElement('div')
+        container.setAttribute('class', 'col-md-12') 
+        let btn = document.createElement('div')
+        btn.setAttribute('class', 'row buttons')
+       
+        container.appendChild(btn)
+        btn.appendChild(this.createAddComments())
+        btn.appendChild(this.cancelForm())
+        form.appendChild(container)
         return element
+    }
+ /*Bouton qui valide le formulaire ajouter un commentaire*/
+    createAddComments() {
+        let container = document.createElement('div')
+        container.setAttribute('class', 'col-md-6')
+        let button = document.createElement('button')
+        button.setAttribute('class', 'btn-action add center-block')
+        button.innerHTML = `Valider`
+        button.addEventListener('click', event => {
+            /* closest : permet de retrouver le parent le plus proche*/
+            event.preventDefault()
+            event.stopPropagation()
+            let form$ = $(button).closest('form')
+            let stars = Number((form$).find('input:checked').val())/*donne ma note*/
+            let comment = (form$).find('textarea').val().trim()/*donne le commentaire*/
+
+            this.ratings.push({ stars, comment })
+            this.average = this.getAverageFromRating()
+            this.reloadComments()
+            form$.remove()
+            this.viewImg()
+            
+        })
+        container.appendChild(button)
+        return container
+    }
+/*Bouton qui annule le formulaire ajouter un commentaire*/
+    cancelForm() {
+        let container = document.createElement('div')
+        container.setAttribute('class', 'col-md-6')
+        let button = document.createElement("button")
+        button.setAttribute('class', 'btn-action add center-block')
+        button.innerHTML = `Annuler`
+        button.addEventListener('click', event => {
+            /* closest : permet de retrouver le parent le plus proche*/
+            event.preventDefault()
+            let form$ = $(button).closest('form')
+           $('form').innerHTML = ''
+            form$.remove()
+        })
+        container.appendChild(button)
+        return container
     }
 /*Afficher l'élément contenant les commentaires*/
     creatRestaurantDetail(){
@@ -175,7 +214,9 @@ class Restaurant {
         detail.setAttribute('class', 'row detail')
         detail.innerHTML = `<div class="col-md-12 comments">
                                 <h4> Commentaires :</h4>
-                                ${this.printRatings()}
+                                <div class="commentsItems">
+                                    ${this.printRatings()}
+                                </div>
                             </div>
                             `
         let button = this.createButton()

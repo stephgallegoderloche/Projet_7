@@ -105,12 +105,12 @@ color: #454545;
     border-color: #a3a3e9;
     width: 10em;
     vertical-align: middle;
+    display: block;
     font-weight: 700;
     padding: 0.3em;
     background-color: #fff;
-    margin: 2.5em auto;
     text-align: center;
-    margin-left: 40%;
+    
     
 }
 .btn-action.add:hover {
@@ -124,7 +124,7 @@ color: #454545;
 #search > div {
 left:0;
 }
-form{
+#search>form{
     display: inline-block;
     width: 90%;
     
@@ -148,21 +148,22 @@ input[type=search] {
 }
 
 /* -------------------Affichage des restaurant---------------- */
-.restaurant {
+.restaurant, #newrestaurant {
     border-bottom: 1px solid #a3a3e9;
+    padding-bottom: 20px;
 }
 /* nom du restaurant*/
-.title > h2{
+.title > h4{
     font-weight: 700;
     cursor: pointer;
-    line-height: 30px;
+    line-height: 18px;
 }
-.title > h2:hover {
+.title > h4:hover {
     color: #a3a3e9;
 }
 /* note moyenne du restaurant*/
 .allStars{
-    margin-top: 20px;
+    margin-top: 5px;
     margin-bottom: 10px;
     line-height: 30px;
 }
@@ -170,8 +171,15 @@ input[type=search] {
 .address{
     margin-bottom: 10px;
 }
+/* image du restaurant*/
+.imgStreetView{
+    margin: 10px 0;
+    display: none;
+}
 /* commentaires du restaurant*/
-
+.comments{
+    margin-bottom: 20px;
+}
 .comments>h4,legend{
     padding: 15px;
     background-color: #c0c0e9;
@@ -181,13 +189,14 @@ input[type=search] {
     padding: 10px 0 10px 50px;
 }
 .comment:nth-child(odd){
-    background-color: #e2e2e2
+    background-color: #e2e2e2;
+    margin-right: 5px;
 }
 /*
     PARTIE FORMULAIRE (note/commentaire)
 */
 /* Ajouter un commentaires au restaurant*/
-.formulaire>form{
+form{
     width: 100%;
 }
 fieldset > .note{
@@ -199,20 +208,42 @@ form>.title{
     border-bottom: 1px solid #a3a3e9;
     margin-bottom: 20px;
 }
+.formulaire{
+    margin-top: 20px;
+}
 form>.title>h4{
     font-weight: 700;
     color: #8a8ac4;
 }
 textarea{
-    width: 90%!important;
-    margin-left: 25px;
+    margin-bottom: 20px;
+    width: 97%!important;
+    margin-left: 10px;
     border-color: #c0c0e9;
+
 }
 .note>label{
     margin-left: 5px;
     color: #8a8ac4;
     font-weight: 700;
 }
+/* Ajouter un restaurant*/
+#newrestaurant{
+    margin-top: 50px;
+    border-bottom: 1px solid #8a8ac4;
+}
+form>.nameRestaurant,form>.addressRestaurant{
+    padding: 5px 0;
+}
+form>.addressRestaurant{
+    margin-bottom: 20px;
+}
+form>.nameRestaurant>input,form>.addressRestaurant>input{
+    border: none;
+    border-bottom: 1px solid #8a8ac4;
+    margin-left: 10px;
+}
+    
 /*
     PARTIE DROITE (map)
 */

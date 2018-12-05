@@ -13,18 +13,26 @@ class App {
                               /*quand on click sur la map on récupère l'adresse et les coordonnées */
                               (address, latLng) => this.newRestaurant.addNewRestaurant(address,latLng),
                               /*quand on récupère les restaurants autour de ma position*/
-                              resultsRestaurants => resultsRestaurants.forEach(restaurant => this.addRestaurant(restaurant))
+                              resultsRestaurants => resultsRestaurants.forEach(restaurant => this.addNewRestaurant(restaurant)),
+                              /*quand on drag la map*/
+                              _ => this.resetAll()
                               )
         this.liste          = new RestaurantListe(document.getElementById('restautants'),
                               restaurant => this.selectRestaurant(restaurant))
         this.newRestaurant  =  new NewRestaurant(document.getElementById('newrestaurant'),
-                              restaurant => this.addRestaurant(restaurant) )
+                              restaurant => this.addNewRestaurant(restaurant) )
         this.restaurants    = []
         
 
         this.fetchRestaurants();
         this.initFilters();
         this.refresh();
+    }
+/*Supprime toute la liste des restaurants*/
+    resetAll(){
+        this.map.reset()
+        this.liste.reset()
+        this.restaurants = []
     }
 /*Fait la liaison entre la map et la liste des restaurants*/
     selectRestaurant(restaurant){
@@ -37,7 +45,7 @@ class App {
             range: true,
             min: 0,
             max: 5,
-            values: [2, 5],
+            values: [0, 5],
             slide: (event, ui) => {
                 $("#amount").val(ui.values[0] + " étoiles" + "  -  " + ui.values[1] + " étoiles");
                 this.setFilter({ stars: { min: ui.values[0], max: ui.values[1] } });
@@ -48,8 +56,8 @@ class App {
     }
 /*Met a jour la liste des restaurants/marker d'après le filtre*/
     setFilter(filters) {
-        this.map.reset();
-        this.liste.reset();
+        this.map.reset()
+        this.liste.reset()
 
         this.restaurants
             .filter(r => {
@@ -57,21 +65,28 @@ class App {
                     return true;
                 }
             })
-            .forEach(r => this.addRestaurant(r));
+            .forEach(r => this.addRestaurant(r))
+            
+            console.log(this.liste)
     }
 /*Ajoute les restaurants*/
     addRestaurant(restaurant) {
-        
-        this.map.addRestaurant(restaurant);
+        this.map.addRestaurant(restaurant)
         this.liste.addRestaurant(restaurant)
     }
+    addNewRestaurant(restaurant){
+        this.restaurants.push(restaurant)
+        this.addRestaurant(restaurant)
+    }
+
 /*Récupérer les restaurant du fichier Json*/
     fetchRestaurants() {
         this.ajaxGet("http://localhost/json/restaurant.json", response => {
             // Transforme la réponse en tableau d'objets JavaScript
-            this.restaurants = JSON.parse(response).map(r => new Restaurant(r));
+            const restaurants = JSON.parse(response).map(r => new Restaurant(r))
             // Affiche le titre de chaque restaurant
-            this.restaurants.forEach( (r,index) => this.addRestaurant(r,index));
+            restaurants.forEach((r, index) => this.addNewRestaurant(r,index))
+            setTimeout(_=>this.map.setDragListener(),5000)
         });
     }
     ajaxGet(url, callback) {
@@ -86,7 +101,7 @@ class App {
             }
         });
         restaurants.addEventListener("error", function () {
-            console.error("Erreur réseau avec l'URL " + url);
+            console.error("Erreur réseau avec l'URL " + url)
         });
         restaurants.send(null);
     }

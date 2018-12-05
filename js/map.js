@@ -4,10 +4,11 @@
  */
 
 class MyMap  {
-    constructor(mapElement, onClickMarker, onClickMap, onLocationRestaurant) {
+    constructor(mapElement, onClickMarker, onClickMap, onLocationRestaurant, onDragMap) {
         this.mapElement         = mapElement
         this.onClickMarker      = onClickMarker
-        this.onClickMap         = onClickMap
+        this.onDragMap          = onDragMap
+        this.onClickMap = onClickMap
         this.restaurants        = [] 
         this.infoWindow         = new google.maps.InfoWindow
         this.geocoder           = new google.maps.Geocoder
@@ -52,7 +53,7 @@ class MyMap  {
     }
 /*Informations du restaurant sur la map*/
     onSelectRestaurant(restaurant){
-        //this.imgStreetView(restaurant)
+        
         this.infoWindow.setContent(`<span> ${restaurant.name} </span><span> ${restaurant.address} </span>`)
         this.infoWindow.open(this.map,this.markers.find(m=>m.restaurant.address === restaurant.address));
     }
@@ -110,45 +111,50 @@ class MyMap  {
             radius,
             type: ['restaurant']
         }
-        this.placesService.nearbySearch(request, (results, status) => {
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                
-                results.forEach(r=>{
-                    this.placesService.getDetails({
-                        placeId           : r.place_id,
-                        fields            : ['name', 'review']
-                    }, (result, status) => {
-                        if (status == google.maps.places.PlacesServiceStatus.OK) {
-                            let restaurant = new Restaurant({
-                                restaurantName      : r.name,
-                                pos                 : r.geometry.location,
-                                address             : r.vicinity,
-                                lat                 : r.geometry.location.lat(),
-                                long                : r.geometry.location.lng(),
-                                ratings             : result.reviews.map(review =>{
-                                    return {stars : review.rating, comment : review.text}
-                                })
-                            })
-                            this.onLocationRestaurant([restaurant])
-                        }
-                    })
-                    /*TODO transformer pour chaque r appeler le service googleplacedetails et appeler this.onLocationRestaurant([le resultat de]) */
-                    
-                })
-                
-            }
-        })
+        this.placesService.nearbySearch(request, (results, status) =>this.showResults(results, status))
         
+    }
+    showResults(results, status) {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+
+            results.forEach(r => {
+                this.placesService.getDetails({
+                    placeId: r.place_id,
+                    fields: ['name', 'review']
+                }, (result, status) => {
+                    if (status == google.maps.places.PlacesServiceStatus.OK) {
+                        let restaurant = new Restaurant({
+                            restaurantName: r.name,
+                            pos: r.geometry.location,
+                            address: r.vicinity,
+                            lat: r.geometry.location.lat(),
+                            long: r.geometry.location.lng(),
+                            ratings: !result.reviews ? [] : result.reviews.map(review => {
+                                return { stars: review.rating, comment: review.text }
+                            })
+                        })
+                        this.onLocationRestaurant([restaurant])
+                    }
+                })
+
+            })
+
+        }
     }
 /*initialise la map*/
     initMap() {
-        this.map = new google.maps.Map(this.mapElement, this.defaultMapParams);
+        this.map = new google.maps.Map(this.mapElement, this.defaultMapParams)
         this.addMyPosition()
-        this.placesService = new google.maps.places.PlacesService(this.map);
+        this.placesService = new google.maps.places.PlacesService(this.map)
 
     /*Action au Click sur la map*/
         google.maps.event.addListener(this.map, 'click', event => this.onClick(event))
-        
+    }
+    setDragListener(){
+        google.maps.event.addListener(this.map, 'bounds_changed', event =>{
+            clearTimeout(this.searchTimeout)
+            this.searchTimeout = setTimeout(_ => this.restaurantsLocationNearbyBounds(),1000)  
+        })
     }
 /*Action du click sur la map */
     onClick(event){
@@ -156,6 +162,21 @@ class MyMap  {
             if(typeof(this.onClickMap) === 'function'){
                 this.onClickMap(address, event.latLng)
             }
+        })
+    }
+/*cherche les restaurants dans la zone de la map*/
+    restaurantsLocationNearbyBounds(){
+        if (!this.onDragMap){
+            return
+        }
+        let search = {
+            bounds: this.map.getBounds(),
+            types: ['restaurant']
+        };
+
+        this.placesService.nearbySearch(search, (results, status) => {
+            this.onDragMap()
+            this.showResults(results, status)
         })
     }
 /*Vérifit et récupère l'adresse trouvé*/
